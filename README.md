@@ -4,8 +4,24 @@ Docker images built for SaladCloud, published to GitHub Container Registry via G
 
 ## Images
 
-The mercury image is based on ubuntu 22. The image should support the sshd service inside the container. The image also support a user "ubuntu" to login instead of only for root.
-The image should not use the unminimize command and only install the software necessary.
+### mercury
+
+Based on Ubuntu 22.04. Supports `sshd` with a non-root `ubuntu` user (password: `ubuntu`).
+
+Installed packages:
+
+| Tool | Purpose |
+|------|---------|
+| openssh-server | SSH daemon |
+| curl | HTTP client |
+| python3, python3-pip | Python runtime |
+| iproute2 | `ip` networking utilities |
+| git | Version control |
+| gcc, g++ | C/C++ compilers |
+| cmake, make | Build systems |
+| gdb | Debugger |
+| build-essential | C/C++ standard headers and toolchain |
+| lsb-release | Distro info (`lsb_release`) |
 
 
 ## Registry
@@ -19,8 +35,8 @@ Images are published to `ghcr.io/<owner>/saladdockers/<image>` with two tags:
 
 The GitHub Actions workflow (`.github/workflows/docker-publish.yml`) runs on every push or pull request to `main`:
 
-- **Pull requests**: builds all four images but does not push
-- **Pushes to main**: builds and pushes all four images to GHCR
+- **Pull requests**: builds all images but does not push
+- **Pushes to main**: builds and pushes all images to GHCR
 
 Builds use GitHub Actions cache (`type=gha`) scoped per image to speed up layer reuse.
 
@@ -28,10 +44,29 @@ Builds use GitHub Actions cache (`type=gha`) scoped per image to speed up layer 
 
 ```bash
 podman build -t mercury ./mercury
-podman build -t venus ./venus
 podman build -t earth ./earth
-podman build -t mars ./mars
 ```
+
+## Verify
+
+After building, run the container and check all installed tools:
+
+```bash
+podman run --rm mercury bash -c "
+  curl --version | head -1 &&
+  python3 --version &&
+  ip -V &&
+  git --version &&
+  gcc --version | head -1 &&
+  g++ --version | head -1 &&
+  cmake --version | head -1 &&
+  gdb --version | head -1 &&
+  make --version | head -1 &&
+  lsb_release -a
+"
+```
+
+Each command should print its version without errors.
 
 ## Run
 
@@ -45,12 +80,4 @@ Connect via SSH as the `ubuntu` user (default password: `ubuntu`):
 
 ```bash
 ssh -p 2222 ubuntu@localhost
-```
-
-For other images (no exposed services, drops to a shell):
-
-```bash
-podman run -it --rm venus
-podman run -it --rm earth
-podman run -it --rm mars
 ```
