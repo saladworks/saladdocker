@@ -81,3 +81,10 @@ Connect via SSH as the `ubuntu` user (default password: `ubuntu`):
 ```bash
 ssh -p 2222 ubuntu@localhost
 ```
+
+
+## 
+```
+ --security-opt seccomp=unconfined --cap-add SYS_ADMIN --cap-add=SYS_PTRACE  
+```
+
