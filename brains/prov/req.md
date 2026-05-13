@@ -1,0 +1,1 @@
+mercucy docker image now only supports amd64 platform. need to support aarch64 platform as well.

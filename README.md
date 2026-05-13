@@ -6,7 +6,7 @@ Docker images built for SaladCloud, published to GitHub Container Registry via G
 
 ### mercury
 
-Based on Ubuntu 22.04. Supports `sshd` with a non-root `ubuntu` user (password: `ubuntu`).
+Based on Ubuntu 22.04. Supports `sshd` with a non-root `ubuntu` user (password: `ubuntu`). Built for `linux/amd64` and `linux/arm64`.
 
 Installed packages:
 
