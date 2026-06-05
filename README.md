@@ -6,13 +6,15 @@ Docker images built for SaladCloud, published to GitHub Container Registry via G
 
 ### mercury
 
-Based on Ubuntu 22.04. Supports `sshd` with a non-root `ubuntu` user (password: `ubuntu`). Built for `linux/amd64` and `linux/arm64`.
+Based on Ubuntu 22.04. Supports `sshd` with a non-root `ubuntu` user (password: `ubuntu`, with `sudo` access). Built for `linux/amd64` and `linux/arm64`.
 
 Installed packages:
 
 | Tool | Purpose |
 |------|---------|
 | openssh-server | SSH daemon |
+| sudo | Privilege escalation (`ubuntu` user is in the `sudo` group) |
+| iputils-ping | `ping` network utility |
 | curl | HTTP client |
 | python3, python3-pip | Python runtime |
 | iproute2 | `ip` networking utilities |
@@ -53,6 +55,8 @@ After building, run the container and check all installed tools:
 
 ```bash
 podman run --rm mercury bash -c "
+  sudo --version | head -1 &&
+  ping -V &&
   curl --version | head -1 &&
   python3 --version &&
   ip -V &&
